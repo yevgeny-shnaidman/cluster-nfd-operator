@@ -313,6 +313,9 @@ func RoleBinding(n NFD) (ResourceStatus, error) {
 	// The Namespace should already be defined, so let's set the
 	// namespace to the namespace defined in the RoleBinding object
 	obj.SetNamespace(n.ins.GetNamespace())
+	for i, _ := range obj.Subjects {
+		obj.Subjects[i].Namespace = n.ins.GetNamespace()
+	}
 
 	// found states if the RoleBinding was found
 	found := &rbacv1.RoleBinding{}
