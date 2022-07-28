@@ -244,20 +244,20 @@ func ClusterRoleBinding(n NFD) (ResourceStatus, error) {
 	// check if Subjects field needs to be updated, since NFD instances can be deployed
 	// into different namespaces
 	subjectFound := false
-	for _, subject := range obj.Subjects {
+	for _, subject := range found.Subjects {
 		if subject.Namespace == n.ins.GetNamespace() {
 			subjectFound = true
 		}
         }
 	if !subjectFound {
-		newSubject := obj.Subjects[0]
+		newSubject := found.Subjects[0]
 		newSubject.Namespace = n.ins.GetNamespace()
-		obj.Subjects = append(obj.Subjects, newSubject)
+		found.Subjects = append(found.Subjects, newSubject)
 	}
 
 	// If we found the ClusterRoleBinding, let's attempt to update it
 	r.Log.Info("Found, updating")
-	err = n.rec.Client.Update(context.TODO(), &obj)
+	err = n.rec.Client.Update(context.TODO(), found)
 	if err != nil {
 		return NotReady, err
 	}
